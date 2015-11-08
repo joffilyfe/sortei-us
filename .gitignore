@@ -1,0 +1,5 @@
+.bundle/
+.Gemfile.lock
+database.sqlite3
+test.sqlite3
+components/

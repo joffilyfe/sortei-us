@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Sortei.me - Jampa Ruby Meetup</title>
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./components/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="page-container">
+    <div class="container">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <% flash.each do |name, msg| %>
+          <div class="alert alert-<%= name %>"><%= msg %></div>
+        <% end %>
+        <%= yield %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1 @@
+Count.create(counter: 0)
