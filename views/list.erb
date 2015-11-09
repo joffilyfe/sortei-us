@@ -1,0 +1,7 @@
+<% if @retweets %>
+	<ul>
+		<% @retweets.each_with_index do |tweet, i| %>
+			<li><%= i+1 %> - <%= tweet['name'] %> - @<%= tweet['account'] %></li>
+		<% end %>
+	</ul>
+<% end %>

@@ -1,4 +1,5 @@
 class TwitterController < App
+  register Sinatra::Flash
 
   get '/callback' do
     
@@ -10,11 +11,13 @@ class TwitterController < App
       response = access_token.request(:get, "/1.1/statuses/retweets/#{settings.tweet_id}.json")
       
       # Parse response from file
-      rsp = JSON.parse(response.body)
-      p rsp.to_json
+      @retweets = parse_retweet_list(JSON.parse(response.body))
+
     else
       p 'Please configure twitter keys.'
     end
+
+    erb :list
 
   end
 
@@ -25,4 +28,16 @@ class TwitterController < App
     access_token = OAuth::AccessToken.new(consumer)
     return access_token
   end
+
+  def parse_retweet_list(response)
+      tweets_array = []
+      response.each_with_index do |tweet, i|
+        hash = {}
+        hash['name'] = tweet['user']['name']
+        hash['account'] = tweet['user']['screen_name']
+        tweets_array << hash
+      end
+      return tweets_array
+  end
+
 end

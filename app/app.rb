@@ -5,6 +5,8 @@ require 'sinatra/flash'
 require 'oauth'
 
 class App < Sinatra::Base
+  register Sinatra::Flash
+  enable :sessions
   configure do
     set :json_encoder, :to_json
     set :erb, :layout => :layout
