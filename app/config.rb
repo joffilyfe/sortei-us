@@ -1,4 +1,6 @@
 require 'sinatra'
+require 'sinatra/activerecord'
+require 'sinatra/param'
 require 'sinatra/flash'
 
 class Config < Sinatra::Base

@@ -1,6 +1,6 @@
 require "sinatra"
-require "./app/config"
-require "./app/app"
-require "./app/model"
+require('./app/app')
+Dir.glob('./app/{models,controllers}/*.rb').each { |file| require file }
 
-run App
+map('/') { run ApplicationController }
+map('/twitter') { run TwitterController }

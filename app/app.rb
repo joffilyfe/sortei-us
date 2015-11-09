@@ -1,48 +1,16 @@
+require 'sinatra'
 require 'sinatra/activerecord'
 require 'sinatra/param'
+require 'sinatra/flash'
+require 'oauth'
 
-class App < Config
-  helpers Sinatra::Param
-  enable :sessions
-  register Sinatra::Flash
-
-  get '/' do
-    erb :index
-  end
-
-  post '/register' do
-    unless @user = User.where(email: params[:email]).first
-      @user = User.create(user_params)
-      @user.save
-    else
-      flash[:register] = 'Zé, você já está concorrendo'
-    end
-
-    erb :register
-  end
-
-  get '/users/?' do
-    content_type :json
-    @users = User.all
-    @users.to_json
-  end
-
-  get '/users/:id/?' do
-    @user = User.find_by_id(params[:id])
-    @user.to_json
-  end
-
-  private
-    def user_params 
-      count = Count.find(1)
-      param :name, String, max_length: 32, required: true
-      param :email, String, max_length: 32, required: true
-      count.counter += 1
-      count.save
-      {
-        name: params[:name],
-        email: params[:email],
-        number: count.counter
-      }
-    end
+class App < Sinatra::Base
+  configure do
+    set :json_encoder, :to_json
+    set :erb, :layout => :layout
+    set :root, File.expand_path('../../', __FILE__)
+    
+    # Set tweet id, now we can run your raffle
+    set :tweet_id, '663063975488299008'
+  end  
 end
