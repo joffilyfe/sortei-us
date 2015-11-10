@@ -1,0 +1,22 @@
+<div ng-controller="ReTweetCtrl">
+  <div class="container">
+    <div class="jumbotron">
+      <h1>Retweets - Sortei.us</h1>
+      <p>Ferramenta para sorteios em eventos.</p>
+      <p>http://github.com/joffilyfe/sortei-us</p>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <h2>Quantidade de retweets: {{data.length}}</h2>
+    <ul class="list-group">
+      <li ng-class="winner == $index+1 ? 'active' : '' " class="list-group-item" ng-repeat="user in data track by $index">
+        <span class="badge">{{$index+1}}</span> {{user.name}} - @{{user.account}}
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-6">
+    <h2>Número sorteado: {{winner}}</h2>
+    <span class="btn btn-primary" ng-click="dice(data.length)">Sortear</span>
+    <a class="btn btn-default" href="/twitter/admin/configure">Configurar</a>
+  </div>
+</div>
