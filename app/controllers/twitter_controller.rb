@@ -1,8 +1,9 @@
 class TwitterController < App
-  register Sinatra::Flash
-
 
   get '/' do
+    # session[:tweet_id] = '663063975488299008'
+    # session[:tweet_id] = '661931597856382976'
+
     if session[:tweet_id]
       erb :'admin/index'
     else
@@ -27,38 +28,51 @@ class TwitterController < App
 
   get '/callback' do
     content_type :json
-    
-    if ENV['TWITTER_CONSUMER_KEY'] and ENV['TWITTER_CONSUMER_KEY_SECRET']
-      # Get Twitter Access Token
-      access_token = prepare_access_token(ENV['TWITTER_CONSUMER_KEY'], ENV['TWITTER_CONSUMER_KEY_SECRET'])
-    
-      # Get response for request RT/Search/etc
-      response = access_token.request(:get, "/1.1/statuses/retweets/#{session[:tweet_id]}.json")
-      
-      # Parse response from file
-      retweets = parse_retweet_list(JSON.parse(response.body)).to_json
+
+    if (session[:twitter_token] and session[:twitter_token_secret])
+      client = Twitter::REST::Client.new do |config|
+        config.consumer_key        = ENV['TWITTER_CONSUMER_KEY']
+        config.consumer_secret     = ENV['TWITTER_CONSUMER_KEY_SECRET']
+        config.access_token        = session[:twitter_token]
+        config.access_token_secret = session[:twitter_token_secret]
+      end
+      retweets = client.retweeters_of(session[:tweet_id], options = {:count => 100})
+      users_list(retweets).to_json
     else
-      {'error': 'Please configure yours twitter keys.'}.to_json
+      {'error': 'Please authorize first the app.'}.to_json
     end
 
   end
 
-  private
+  get '/oauth/authorize' do
+    twitterOauth = TwitterOauth::Prepare
+    twitterOauth.mount_url(request.base_url)
+    consumer = twitterOauth.consumer
+    response = twitterOauth.autorize_url(consumer)
 
-  def prepare_access_token(oauth_token, oauth_token_secret)
-    consumer = OAuth::Consumer.new(oauth_token, oauth_token_secret, { :site => "https://api.twitter.com", :scheme => :header })
-    access_token = OAuth::AccessToken.new(consumer)
-    return access_token
+    session[:request_token] = twitterOauth.token
+    session[:request_token_secret] = twitterOauth.secret
+    redirect to(response)
   end
 
-  def parse_retweet_list(response)
-      tweets_array = []
-      response.each_with_index do |tweet, i|
-        hash = {}
-        hash['name'] = tweet['user']['name']
-        hash['account'] = tweet['user']['screen_name']
-        tweets_array << hash
-      end
-      return tweets_array
+  get '/oauth/confirm' do
+    twitterOauth = TwitterOauth::Confirm
+    access_token = twitterOauth.access_token(session[:request_token], session[:request_token_secret], params[:oauth_verifier])
+    session[:twitter_token] = access_token.token
+    session[:twitter_token_secret] = access_token.secret
+    redirect to('/')
+  end
+
+  private
+  
+  def users_list(response)
+    array = []    
+    response.each do |t|
+      hash = {}
+      hash['name'] = t.name
+      hash['account'] = t.screen_name
+      array << hash
+    end
+    return array
   end
 end
