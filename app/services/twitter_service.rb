@@ -21,7 +21,7 @@ module TwitterOauth
     end
 
     def self.mount_url(base_url)
-      @callback_url = "#{base_url}/twitter/oauth/confirm"
+      @callback_url = "#{base_url}/auth/confirm"
     end
 
   end

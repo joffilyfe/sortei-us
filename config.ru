@@ -4,3 +4,5 @@ Dir.glob('./app/{models,controllers,services}/*.rb').each { |file| require file 
 
 map('/') { run ApplicationController }
 map('/twitter') { run TwitterController }
+map('/auth') { run AuthorizeController }
+

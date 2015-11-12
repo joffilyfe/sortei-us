@@ -39,28 +39,8 @@ class TwitterController < App
       retweets = client.retweeters_of(session[:tweet_id], options = {:count => 100})
       users_list(retweets).to_json
     else
-      {'error': 'Please authorize first the app.'}.to_json
+      {'error': 'Please authorize the app.'}.to_json
     end
-
-  end
-
-  get '/oauth/authorize' do
-    twitterOauth = TwitterOauth::Prepare
-    twitterOauth.mount_url(request.base_url)
-    consumer = twitterOauth.consumer
-    response = twitterOauth.autorize_url(consumer)
-
-    session[:request_token] = twitterOauth.token
-    session[:request_token_secret] = twitterOauth.secret
-    redirect to(response)
-  end
-
-  get '/oauth/confirm' do
-    twitterOauth = TwitterOauth::Confirm
-    access_token = twitterOauth.access_token(session[:request_token], session[:request_token_secret], params[:oauth_verifier])
-    session[:twitter_token] = access_token.token
-    session[:twitter_token_secret] = access_token.secret
-    redirect to('/')
   end
 
   private

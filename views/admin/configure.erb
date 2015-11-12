@@ -1,8 +1,10 @@
-<h1>Adicione o ID do Tweet que você quer monitorar</h1>
-<form action="/twitter/admin/configure" method="POST">
-  <fieldset class="form-group">
-    <label for="id">ID do Tweet</label>
-    <input type="text" class="form-control col-md-6" name="id" value="<%= @tweet_id %>">
-  </fieldset>
-  <button class="btn btn-primary">Salvar</button>
-</form>
+<div class="container">
+  <h1>Adicione o ID do Tweet que você quer monitorar</h1>
+  <form action="/twitter/admin/configure" method="POST">
+    <fieldset class="form-group">
+      <label for="id">ID do Tweet</label>
+      <input type="text" class="form-control col-md-6" name="id" value="<%= @tweet_id %>">
+    </fieldset>
+    <button class="btn btn-primary">Salvar</button>
+  </form>
+</div>

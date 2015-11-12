@@ -8,17 +8,16 @@
   <link rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.min.css">
   <script src="/components/angular/angular.js"></script>
   <script src="/js/app.js"></script>
+  <script src="/js/main.js"></script>
 </head>
 <body ng-app="tweetApp">
   <div class="page-container">
-    <div class="container">
       <div class="col-md-12 col-sm-12 col-xs-12">
         <% flash.each do |name, msg| %>
           <div class="alert alert-<%= name %>"><%= msg %></div>
         <% end %>
-        <%= yield %>
       </div>
-    </div>
+      <%= yield %>
   </div>
 </body>
 </html>
